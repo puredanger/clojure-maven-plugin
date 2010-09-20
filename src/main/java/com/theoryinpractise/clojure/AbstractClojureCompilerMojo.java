@@ -202,6 +202,12 @@ public abstract class AbstractClojureCompilerMojo extends AbstractMojo {
      */
     private boolean warnOnReflection;
 
+    /**
+     * Specify additional vmargs to use when running clojure or swank.
+     * @parameter expression="${clojure.vmargs}"
+     */
+    private String vmargs;
+
     private String getJavaExecutable() throws MojoExecutionException {
 
         Toolchain tc = toolchainManager.getToolchainFromBuildContext("jdk", //NOI18N
@@ -338,7 +344,9 @@ public abstract class AbstractClojureCompilerMojo extends AbstractMojo {
         else {
             cl = new CommandLine(javaExecutable);
         }
-        
+       
+	if (vmargs != null) cl.addArgument(vmargs);
+ 
         cl.addArgument("-cp");
         cl.addArgument(cp, false);
         cl.addArgument("-Dclojure.compile.path=" + outputDirectory.getPath(), false);
